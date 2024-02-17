@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.json.JSONException;
 import org.json.JSONArray;
@@ -79,7 +80,8 @@ public class DictionaryActivity extends AppCompatActivity {
 
         // Get the intent, verify the action, and get the query.
         Intent intent = getIntent();
-        String searchedWord = intent.getStringExtra("searched_word");
+        String searchedWord = Objects.requireNonNull(intent.getStringExtra("searched_word")).replace(' ', '-');
+        String originalWord = intent.getStringExtra("searched_word");
 
         Button mPlay = findViewById(R.id.playButton);
         Button mLeft = findViewById(R.id.leftButton);
@@ -97,7 +99,7 @@ public class DictionaryActivity extends AppCompatActivity {
                 }
             }
 
-            mWord.setText(wordArray.getString(indexes.get(0)));
+            mWord.setText(originalWord);
             // set video link (make sure it's a mp4 link only (method will be `wget`)
             JSONArray methodArray = obj.getJSONArray("download_method_db");
             JSONArray videoLinkArray = obj.getJSONArray("video_link_db");

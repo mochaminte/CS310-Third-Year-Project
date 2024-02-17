@@ -1,6 +1,8 @@
 package com.example.shine;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     LearnFragment secondFragment = new LearnFragment();
     DictionaryFragment thirdFragment = new DictionaryFragment();
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item){
         switch (item.getItemId()) {

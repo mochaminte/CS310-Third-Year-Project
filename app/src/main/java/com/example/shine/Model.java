@@ -1,5 +1,9 @@
 package com.example.shine;
 
+
+/**
+ * Model used to create template for card categories
+ */
 public class Model {
     int image;
     String name, tag;
@@ -10,6 +14,11 @@ public class Model {
         this.name = name;
         this.tag = tag;
     }
+    public Model(String name, String tag){
+        this.name = name;
+        this.tag = tag;
+    }
+
     public int getImage() {
         return image;
     }

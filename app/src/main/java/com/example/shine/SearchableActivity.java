@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -21,11 +22,19 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+
+/**
+ * SearchableActivity populates the ListView with words from the output.txt
+ * generated from the bsldict.json file.
+ * <p>
+ * It also dynamically shows results based on the matching characters with
+ * the searched string.
+ */
 public class SearchableActivity extends Activity {
     private static final String TAG = "SEARCH";
     SearchView searchView;
     ListView listView;
-
+    Button fab;
     ArrayList<String> arrayList;
     ArrayAdapter<?> adapter;
 
@@ -58,22 +67,9 @@ public class SearchableActivity extends Activity {
 
         searchView=findViewById(R.id.searchView);
         listView=findViewById(R.id.listView);
-
-        // ADD DATA HERE
-        /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                arrayList = (ArrayList<String>) Files.readAllLines(Paths.get("src/main/assets/output_words.txt"));
-            } catch (IOException e) {
-                Log.d(TAG, "file not opened");
-                throw new RuntimeException(e);
-            }
-        }
-
-         */
+        fab=findViewById(R.id.fab);
 
         arrayList = readLinesFromAssets(this, "output_words.txt");
-
         adapter=new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1,arrayList);
 
         listView.setAdapter(adapter);
@@ -102,6 +98,14 @@ public class SearchableActivity extends Activity {
             }
         });
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Registering click");
+                Intent intent = new Intent(getApplicationContext(), SentenceActivity.class);
+                startActivity(intent);
+            };
+        });
 
     }
 }

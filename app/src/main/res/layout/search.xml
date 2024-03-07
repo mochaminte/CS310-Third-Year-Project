@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -13,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Search words / phrases"
-        android:iconifiedByDefault="false">
+        android:iconifiedByDefault="false"
+        android:focusableInTouchMode="true">
         <requestFocus />
     </androidx.appcompat.widget.SearchView>
 
@@ -24,3 +29,18 @@
         android:layout_height="wrap_content"/>
 
 </LinearLayout>
+
+    <!-- tooltip -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/baseline_transcribe_24"
+        android:layout_margin="16dp"
+        android:tooltipText="Translate Sentences"
+        android:contentDescription="Person Transcribing"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

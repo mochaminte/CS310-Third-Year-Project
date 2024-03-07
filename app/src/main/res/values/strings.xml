@@ -6,18 +6,41 @@
     <string name="left">Previous</string>
     <string name="slow">0.5x speed</string>
     <string name="right">Next</string>
+    <string name="restart">Restart</string>
 
     <!-- For the search bar -->
     <string name="search_hint">Search signs</string>
     <string name="search_title">Search</string>
 
     <!-- Navbar -->
-    <string name="_3">Welcome User !</string>
     <string name="home">Home</string>
     <string name="learn">Learn</string>
     <string name="dictionary">Dictionary</string>
+
+    <!-- Category cards for learning -->
     <string name="card1">Greetings</string>
     <string name="card2">Family</string>
     <string name="card3">Custom</string>
+    <string name="favbuttondesc">FavButtonDesc</string>
+    <string name="cardimageviewdesc">CardImageViewDesc</string>
+
+    <!-- Strings for the button rating for fsrs-->
+    <string name="again">Again</string>
+    <string name="hard">Hard</string>
+    <string name="good">Good</string>
+    <string name="easy">Easy</string>
+
+    <string name="reveal">Show Answer</string>
+
+    <!-- Strings for sentence translation / word stitching -->
+    <string name="sentence_input">Type your sentence here...</string>
+    <string name="sentence_btn">Translate Sentence</string>
+    <string name="sentence_hint">Your sentence will appear here.</string>
+
+    <!-- Home page string resources -->
+    <string name="home_welcome">Welcome</string>
+    <string name="home_welcome_2">user</string>
+
+
 
 </resources>

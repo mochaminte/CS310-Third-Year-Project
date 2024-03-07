@@ -11,9 +11,15 @@
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true"
     android:id="@+id/cardView">
+    <!-- back/foreground creates ripple effect -->
     <RelativeLayout
         android:id="@+id/item"
+        android:focusable="true"
+        android:gravity="center|start"
         android:layout_width="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
         android:layout_height="match_parent">
         <ImageView
             android:layout_width="match_parent"
@@ -21,7 +27,8 @@
             android:scaleType="centerCrop"
             android:id="@+id/image"
             android:src="@drawable/ic_launcher_background"
-            android:contentDescription="CardImageViewDesc" />
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/cardimageviewdesc" />
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
@@ -30,23 +37,24 @@
             android:layout_marginStart="5dp"
             android:fontFamily="sans-serif"
             android:gravity="center_vertical"
-            android:text="LOREM IPSUM"
+            android:text=""
             android:textSize="17sp"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
+            android:background="?android:attr/selectableItemBackground"
             android:textColor="@android:color/black"/>
         <TextView
             android:id="@+id/tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/name"
-            android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="2dp"
             android:fontFamily="sans-serif"
             android:gravity="center_vertical"
-            android:text="Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups."
+            android:text=""
             android:textStyle="italic"
+            android:background="?android:attr/selectableItemBackground"
             android:textSize="15sp"
             android:maxLines="2"
             android:layout_toStartOf="@+id/imageButton"/>
@@ -59,6 +67,6 @@
             android:src="@drawable/ic_heart_border"
             android:layout_below="@id/image"
             android:layout_marginEnd="5dp"
-            android:contentDescription="FavButtonDesc" />
+            android:contentDescription="@string/favbuttondesc" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

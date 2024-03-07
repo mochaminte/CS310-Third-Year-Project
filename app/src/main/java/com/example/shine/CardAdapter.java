@@ -1,5 +1,6 @@
 package com.example.shine;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+
+
+/**
+ * Used to load card information to the view
+ * i.e. the category cards in the learning section of the bottom navigation bar
+ */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> {
     //create a list to pass our Model class
     List<Model> modelList;
@@ -27,6 +34,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
                 .inflate(R.layout.learning_card_template,parent,false);
         return new MyViewHolder(view);
     }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressWarnings("deprecation")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         //bind all custom views by its position
@@ -48,6 +58,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.MyViewHolder> 
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return modelList.size();

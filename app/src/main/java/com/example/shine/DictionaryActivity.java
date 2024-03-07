@@ -1,51 +1,37 @@
 package com.example.shine;
 
-import android.app.Activity;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.URLUtil;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Arrays;
 import java.util.Objects;
 
-import org.json.JSONException;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 public class DictionaryActivity extends AppCompatActivity {
-    private static final String TAG = "VIDEO PLAYER";
+    private static final String TAG = "DICTIONARY";
     private VideoView mVideoView;
     private Button mSlow;
     private String videoUrl;
@@ -107,7 +93,9 @@ public class DictionaryActivity extends AppCompatActivity {
                 if(methodArray.getString(indexes.get(i)).equalsIgnoreCase("wget")){
                     videoUrls.add(videoLinkArray.getString(indexes.get(i)));
                     Log.d(TAG, "video url " + "#" + i + ":" + videoLinkArray.getString(indexes.get(i)));
+
                 }
+
             }
             videoUrl = videoUrls.get(currentIndex);
 
@@ -150,7 +138,7 @@ public class DictionaryActivity extends AppCompatActivity {
             });
             mRight.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
-                    /**
+                    /*
                      if (mVideoView != null) {
                      mVideoView.seekTo(0);
                      }
@@ -168,7 +156,7 @@ public class DictionaryActivity extends AppCompatActivity {
             });
             mSlow.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
-                    /**
+                    /*
                      if (mVideoView != null) {
                      videoUrl = null;
                      mVideoView.stopPlayback();
@@ -177,6 +165,7 @@ public class DictionaryActivity extends AppCompatActivity {
                     mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
+                            // TODO fix playback not working
                             PlaybackParams myPlayBackParams = new PlaybackParams();
                             if(!slowPlayback) {
                                 myPlayBackParams.setSpeed(0.5f); //here set speed eg. 0.5 for slow 2 for fast mode
@@ -202,13 +191,11 @@ public class DictionaryActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d(TAG, "help me");
+            Log.d(TAG, "JSON file could not be read.");
         }
     }
 
-    /**
-     * TODO: Need to fix
-     * */
+    // TODO need to fix
     private void playVideo() {
         try {
             /*

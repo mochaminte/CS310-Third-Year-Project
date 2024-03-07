@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 // import com.example.Fragment.*;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import java.io.*;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnItemSelectedListener {
     BottomNavigationView bottomNavigationView;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
-    ThirdFragment firstFragment = new ThirdFragment();
+    HomeFragment firstFragment = new HomeFragment();
     LearnFragment secondFragment = new LearnFragment();
     DictionaryFragment thirdFragment = new DictionaryFragment();
 

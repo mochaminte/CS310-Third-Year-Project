@@ -1,24 +1,23 @@
 package com.example.shine;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.io.*;
-import androidx.fragment.app.Fragment;
-
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +29,7 @@ public class DictionaryFragment extends Fragment {
     private static final String TAG = "SEARCH";
     SearchView searchView;
     ListView listView;
+    FloatingActionButton fab;
     ArrayList<String> arrayList;
     ArrayAdapter<?> adapter;
 
@@ -71,6 +71,7 @@ public class DictionaryFragment extends Fragment {
 
         searchView = view.findViewById(R.id.searchView);
         listView = view.findViewById(R.id.listView);
+        fab=view.findViewById(R.id.fab);
 
         arrayList = readLinesFromAssets(requireContext(), "output_words.txt");
 
@@ -100,6 +101,15 @@ public class DictionaryFragment extends Fragment {
                 adapter.getFilter().filter(newText);
                 return false;
             }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Registering click");
+                Intent intent = new Intent(requireContext(), SentenceActivity.class);
+                startActivity(intent);
+            };
         });
     }
 }

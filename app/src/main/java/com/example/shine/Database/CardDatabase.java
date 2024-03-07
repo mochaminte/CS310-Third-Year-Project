@@ -36,77 +36,79 @@ public abstract class CardDatabase extends RoomDatabase {
     public abstract CardDao cardDao();
     public abstract FsrsDao fsrsDao();
     private static volatile CardDatabase INSTANCE;
+    private static Context sContext;
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    // static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    static final ExecutorService databaseWriteExecutor = Executors.newSingleThreadExecutor();
 
 
     public static CardDatabase getDatabase(final Context context) {
+        sContext = context;
         synchronized (CardDatabase.class) {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                 CardDatabase.class, "card_database")
-                        .allowMainThreadQueries()
-                        .addCallback(sRoomDatabaseCallback(context)) // populates the database
+                        .addCallback(sRoomDatabaseCallback) // populates the database
                         .build();
+                INSTANCE.cardDao().loadAllCards();
                 Log.d("DATABASE", "is this being called HERE ?");
             }
-            return INSTANCE;
         }
+        return INSTANCE;
     }
 
 
-    public static RoomDatabase.Callback sRoomDatabaseCallback(final Context context){
-         Log.d("DATABASE", "Callback being called? ");
-         return new RoomDatabase.Callback() {
-             @Override
-             public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                 super.onCreate(db);
-                 Log.d("DATABASE", "onCreate callback triggered.");
-                 databaseWriteExecutor.execute(() -> {
-                     // Populate the database in the background.
-                     try {
-                         Log.d("DATABASE", "Something happening here ? ");
-                         CardDao cardDao = CardDatabase.getDatabase(context).cardDao();
-                         FsrsDao fsrsDao = CardDatabase.getDatabase(context).fsrsDao();
-                         cardDao.deleteAll();
-                         // cardDao.insertAll(Card.populateData(context.getApplicationContext()));
+    public static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback(){
+         @Override
+         public void onCreate(@NonNull SupportSQLiteDatabase db) {
+             super.onCreate(db);
+             Log.d("DATABASE", "onCreate callback triggered.");
+             databaseWriteExecutor.execute(() -> {
+                 // Populate the database in the background.
+                 try {
+                     Log.d("DATABASE", "Something happening here ? ");
+                     CardDao cardDao = CardDatabase.getDatabase(sContext.getApplicationContext()).cardDao();
+                     FsrsDao fsrsDao = CardDatabase.getDatabase(sContext.getApplicationContext()).fsrsDao();
+                     cardDao.deleteAll();
+                     // cardDao.insertAll(Card.populateData(context.getApplicationContext()));
 
-                         final String TAG = "DATABASE";
+                     final String TAG = "DATABASE";
 
-                         JSONObject categ_obj = new JSONObject(Objects.requireNonNull(readJSON("categories.json", context)));
-                         JSONObject bsldict_obj = new JSONObject(Objects.requireNonNull(readJSON("bsldict.json", context)));
+                     JSONObject categ_obj = new JSONObject(Objects.requireNonNull(readJSON("categories.json", sContext.getApplicationContext())));
+                     JSONObject bsldict_obj = new JSONObject(Objects.requireNonNull(readJSON("bsldict.json", sContext.getApplicationContext())));
 
-                         JSONArray wordArray = bsldict_obj.getJSONArray("word");
-                         JSONArray videoArray = bsldict_obj.getJSONArray("video_link_db");
-                         JSONArray methodArray = bsldict_obj.getJSONArray("download_method_db");
+                     JSONArray wordArray = bsldict_obj.getJSONArray("word");
+                     JSONArray videoArray = bsldict_obj.getJSONArray("video_link_db");
+                     JSONArray methodArray = bsldict_obj.getJSONArray("download_method_db");
 
-                         Iterator<String> categories = categ_obj.keys();
+                     Iterator<String> categories = categ_obj.keys();
 
-                         Log.d(TAG, "Searching for words");
+                     Log.d(TAG, "Searching for words");
 
-                         // for each category, add a video url for each word in the category only if the method is wget
-                         for (int j=0, max_cat = categ_obj.length(); j < max_cat; j++ ) {
-                             String cur_cat_word = categories.next();
-                             JSONArray cur_cat = categ_obj.getJSONArray(cur_cat_word);
-                             for (int i = 0, max = cur_cat.length(); i < max; i++) {
-                                 if (wordArray.getString(i).equalsIgnoreCase(cur_cat.getString(i).replace(" ", "-"))) {
-                                     if (methodArray.getString(i).equalsIgnoreCase("wget")) {
-                                         Log.d(TAG, "video url " + "#" + i + ":" + videoArray.getString(i));
+                     // for each category, add a video url for each word in the category only if the method is wget
+                     for (int j=0, max_cat = categ_obj.length(); j < max_cat; j++ ) {
+                         String cur_cat_word = categories.next();
+                         JSONArray cur_cat = categ_obj.getJSONArray(cur_cat_word);
+                         for (int i = 0, max = cur_cat.length(); i < max; i++) {
+                             for(int k = 0, max_words = wordArray.length(); k < max_words; k++) {
+                                 if (wordArray.getString(k).equalsIgnoreCase(cur_cat.getString(i).replace(" ", "-"))) {
+                                     if (methodArray.getString(k).equalsIgnoreCase("wget")) {
+                                         // Log.d(TAG, "video url " + "#" + k + ":" + videoArray.getString(i));
                                          // Card with the video url as the front / "test"
                                          UUID uuid1 = UUID.randomUUID();
                                          UUID uuid2 = UUID.randomUUID();
                                          cardDao.insert(new Card(
                                                  uuid1,                      // uuid
-                                                 videoArray.getString(i),    // front
-                                                 wordArray.getString(i),     // back
+                                                 videoArray.getString(k),    // front
+                                                 wordArray.getString(k),     // back
                                                  cur_cat_word,               // category
                                                  true                        // sign question & word answer
                                          ));
                                          // Card with the word as the front / "test"
                                          cardDao.insert(new Card(
                                                  uuid2,                      // uuid
-                                                 wordArray.getString(i),     // front
-                                                 videoArray.getString(i),    // back
+                                                 wordArray.getString(k),     // front
+                                                 videoArray.getString(k),    // back
                                                  cur_cat_word,               // category
                                                  false                       // word question & sign answer
                                          ));
@@ -115,17 +117,21 @@ public abstract class CardDatabase extends RoomDatabase {
                                          fsrsDao.insert(new Fsrs(uuid2));
                                          break;
                                      }
-
                                  }
                              }
                          }
-                     } catch (JSONException e) {
-                         Log.d("DATABASE", "failed to add to database");
                      }
-                     Log.d("DATABASE", "Populated database in background.");
-                 });
-             }
+                     db.setTransactionSuccessful();
+                 } catch (JSONException e) {
+                     Log.d("DATABASE", "failed to add to database");
+                 } finally {
+                     db.endTransaction();
+                 }
+                 Log.d("DATABASE", "Populated database in background.");
+             });
          };
+
+
     };
 
     public static String readJSON(String file, Context context){

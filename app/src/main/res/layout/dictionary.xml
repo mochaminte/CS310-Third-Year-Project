@@ -21,7 +21,8 @@
         android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="word"/>
         <!-- app:layout_constraintTop_toBottomOf="@+id/search"-->
 
     <TextView
@@ -48,22 +49,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/word" />
 
-    <Button
+    <ImageView
         android:id="@+id/leftButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:textAllCaps="false"
-        android:text="@string/left"
+        android:src="@drawable/ic_back"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/slowButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playButton" />
+        app:layout_constraintTop_toBottomOf="@+id/playButton"
+        android:contentDescription="back"
+        android:focusable="true" />
 
     <Button
         android:id="@+id/slowButton"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/slow"
         android:textAllCaps="false"
@@ -73,15 +76,16 @@
         app:layout_constraintStart_toEndOf="@+id/leftButton"
         app:layout_constraintTop_toTopOf="@+id/leftButton" />
 
-    <Button
+    <ImageView
         android:id="@+id/rightButton"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/right"
-        android:textAllCaps="false"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_forward"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/slowButton"
-        app:layout_constraintTop_toTopOf="@+id/slowButton" />
+        app:layout_constraintTop_toTopOf="@+id/slowButton"
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

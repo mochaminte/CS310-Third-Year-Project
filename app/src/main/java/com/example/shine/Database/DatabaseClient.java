@@ -1,11 +1,7 @@
 package com.example.shine.Database;
 
-import android.content.Context;
-import android.util.Log;
-
-import androidx.room.Room;
-
 public class DatabaseClient {
+    /*
     private Context context;
     private static DatabaseClient instance;
     private CardDatabase cardDatabase;
@@ -15,7 +11,7 @@ public class DatabaseClient {
 
         //creating the app database with Room database builder
         this.cardDatabase = Room.databaseBuilder(context, CardDatabase.class, "card_database")
-                .addCallback(CardDatabase.sRoomDatabaseCallback(context))
+                .addCallback(CardDatabase.sRoomDatabaseCallback)
                 .allowMainThreadQueries()
                 .build();
         Log.d("DATABASE", "is this being called ?");
@@ -34,4 +30,6 @@ public class DatabaseClient {
         Log.d("DATABASE", "is this not being called ? ");
         return cardDatabase;
     }
+
+     */
 }

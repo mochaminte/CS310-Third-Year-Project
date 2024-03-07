@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -70,8 +71,8 @@ public class DictionaryActivity extends AppCompatActivity {
         String originalWord = intent.getStringExtra("searched_word");
 
         Button mPlay = findViewById(R.id.playButton);
-        Button mLeft = findViewById(R.id.leftButton);
-        Button mRight = findViewById(R.id.rightButton);
+        ImageView mLeft = findViewById(R.id.leftButton);
+        ImageView mRight = findViewById(R.id.rightButton);
         mSlow = findViewById(R.id.slowButton);
 
         try {

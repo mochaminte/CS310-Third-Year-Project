@@ -40,14 +40,14 @@ public class CardScheduler {
                     .fsrsDao()
                     .getDueCards(new SimpleSQLiteQuery("SELECT * FROM fsrs WHERE next_repetition <= " + String.format(Locale.getDefault(), "%.3f",  System.currentTimeMillis() / 1000.0) + " AND category LIKE " + category));
             */
-            List<Fsrs> fsrs = CardDatabase.getDatabase(context)
+            List<Fsrs> fsrs = CardDatabase.getDatabase(context.getApplicationContext())
                     .fsrsDao()
                     .loadAllFsrs();
-            fsrs = CardDatabase.getDatabase(context)
+            fsrs = CardDatabase.getDatabase(context.getApplicationContext())
                     .fsrsDao()
                     .loadAllFsrs();
             for(Fsrs fsrs_card : fsrs){
-                Card dueCard = CardDatabase.getDatabase(context)
+                Card dueCard = CardDatabase.getDatabase(context.getApplicationContext())
                         .cardDao()
                         .findCardWithId(fsrs_card.getCarduuid());
                 queue.enqueue(dueCard);
@@ -62,7 +62,7 @@ public class CardScheduler {
         Card ratedCard = this.queue.front();
         executor.execute(() -> {
             // Find all fsrs matching the carduuid of the rated card
-            Fsrs fsrs = CardDatabase.getDatabase(context)
+            Fsrs fsrs = CardDatabase.getDatabase(context.getApplicationContext())
                     .fsrsDao()
                     .getFsrsByCardId(ratedCard.getCarduuid());
 
@@ -87,7 +87,7 @@ public class CardScheduler {
             fsrs.setNextRepetitionTime(result.getNextRepetitionTime());
             fsrs.setLastReview(result.getLastReview());
 
-            CardDatabase.getDatabase(context)
+            CardDatabase.getDatabase(context.getApplicationContext())
                     .fsrsDao()
                     .update(fsrs);
 

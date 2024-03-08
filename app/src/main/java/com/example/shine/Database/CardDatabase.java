@@ -46,6 +46,7 @@ public abstract class CardDatabase extends RoomDatabase {
         sContext = context;
         synchronized (CardDatabase.class) {
             if (INSTANCE == null) {
+                Log.d("DATABASE", "Getting database");
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                 CardDatabase.class, "card_database")
                         .addCallback(sRoomDatabaseCallback) // populates the database
@@ -57,16 +58,16 @@ public abstract class CardDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-
     public static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback(){
          @Override
          public void onCreate(@NonNull SupportSQLiteDatabase db) {
+             Log.d("DATABASE", "onCreate is being called");
              super.onCreate(db);
              Log.d("DATABASE", "onCreate callback triggered.");
              databaseWriteExecutor.execute(() -> {
                  // Populate the database in the background.
                  try {
-                     Log.d("DATABASE", "Something happening here ? ");
+                     Log.d("DATABASE", "Something happening here ?");
                      CardDao cardDao = CardDatabase.getDatabase(sContext.getApplicationContext()).cardDao();
                      FsrsDao fsrsDao = CardDatabase.getDatabase(sContext.getApplicationContext()).fsrsDao();
                      cardDao.deleteAll();
@@ -121,15 +122,17 @@ public abstract class CardDatabase extends RoomDatabase {
                              }
                          }
                      }
-                     db.setTransactionSuccessful();
                  } catch (JSONException e) {
                      Log.d("DATABASE", "failed to add to database");
-                 } finally {
-                     db.endTransaction();
                  }
                  Log.d("DATABASE", "Populated database in background.");
              });
-         };
+             try{
+                 databaseWriteExecutor.wait();
+             } catch (InterruptedException e) {
+                 throw new RuntimeException(e);
+             }
+         }
 
 
     };

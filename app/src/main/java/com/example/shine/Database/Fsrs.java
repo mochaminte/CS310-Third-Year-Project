@@ -3,6 +3,7 @@ package com.example.shine.Database;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class Fsrs {
     @ColumnInfo(defaultValue = "0")
     public long last_review;
 
+    @Ignore
     public Fsrs(){
         this.carduuid = UUID.randomUUID();
     }

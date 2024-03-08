@@ -85,8 +85,11 @@ public class LearningActivity extends AppCompatActivity {
         cardScheduler.queueDueCards(category, getApplicationContext());
 
         front = cardScheduler.getCardFront(); // front of card
+        Log.d("CARD", "Card front: " + front);
         back = cardScheduler.getCardBack(); // back of card (answer)
+        Log.d("CARD", "Card back: " + back);
         signPrompt = cardScheduler.getSignPrompt(); // check whether front is a sign or a word
+        Log.d("CARD", "Card bool: " + signPrompt);
 
         // if sign is the front, set the videoView and set answer to the word meaning
         if(signPrompt){

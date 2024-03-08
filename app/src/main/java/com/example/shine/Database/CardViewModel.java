@@ -11,11 +11,10 @@ public class CardViewModel extends AndroidViewModel {
         super(application);
     }
     /*
-    private CardRepository mRepository;
+
     private final Card[] mAllCards;
     public CardViewModel (Application application) {
         super(application);
-        mRepository = new CardRepository(application);
         mAllCards = mRepository.loadAllCards();
     }
 

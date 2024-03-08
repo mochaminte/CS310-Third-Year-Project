@@ -54,6 +54,14 @@ public class CardScheduler {
                 Log.d(TAG, "Enqueued a card");
             }
         });
+        /*
+        try{
+            executor.wait();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+         */
         Log.d(TAG, "Finding cards and filling them");
 
     }

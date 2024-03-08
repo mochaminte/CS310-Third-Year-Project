@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import org.json.JSONArray;
@@ -37,7 +38,7 @@ public class Card {
     public String category;
     public Boolean signPrompt; // true if sign is front and word is back (answer)
 
-
+    @Ignore
     public Card(){
         this.carduuid = UUID.randomUUID();
     }

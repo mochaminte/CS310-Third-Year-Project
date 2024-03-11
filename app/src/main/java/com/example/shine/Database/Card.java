@@ -30,11 +30,7 @@ public class Card {
     public String front;
     @ColumnInfo(defaultValue = "")
     public String back;
-    /* TODO delete
-    @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
-     */
     public long created;
-    @ColumnInfo(defaultValue = "RANDOM")
     public String category;
     public Boolean signPrompt; // true if sign is front and word is back (answer)
 

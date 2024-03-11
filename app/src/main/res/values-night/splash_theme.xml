@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Splash Screen Theme. -->
+    <style name="Theme.AppSplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/lavender</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_anim__1_</item>
+        <item name="windowSplashScreenAnimationDuration">800</item>
+        <item name="postSplashScreenTheme">@style/Theme.Shine</item>
+        <!-- Status bar and Nav bar configs -->
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

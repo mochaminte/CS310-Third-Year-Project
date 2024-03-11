@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.URLUtil;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +62,16 @@ public class DictionaryActivity extends AppCompatActivity {
         return json;
     }
 
+    private ViewPager2 initialiseViewPager() {
+        ViewPager2 viewPager = findViewById(R.id.carouselViewPager);
+        viewPager.setAdapter(new VideoPagerAdapter(getApplicationContext(), videoUrls));
+        VideoPagerAdapter adapter = (VideoPagerAdapter) viewPager.getAdapter();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+        return viewPager;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +82,9 @@ public class DictionaryActivity extends AppCompatActivity {
         String searchedWord = Objects.requireNonNull(intent.getStringExtra("searched_word")).replace(' ', '-');
         String originalWord = intent.getStringExtra("searched_word");
 
-        Button mPlay = findViewById(R.id.playButton);
-        ImageView mLeft = findViewById(R.id.leftButton);
-        ImageView mRight = findViewById(R.id.rightButton);
+        Button mPlay = findViewById(R.id.restart);
         mSlow = findViewById(R.id.slowButton);
+
 
         try {
             JSONObject obj = new JSONObject(readJSON());
@@ -100,61 +111,13 @@ public class DictionaryActivity extends AppCompatActivity {
             }
             videoUrl = videoUrls.get(currentIndex);
 
-            mVideoView = (VideoView) findViewById(R.id.video);
-            Uri uri = Uri.parse(videoUrl);
-            mVideoView.setVideoURI(uri);
-            mVideoView.start();
+            ViewPager2 viewPager = initialiseViewPager();
+            TabLayout tabLayout = findViewById(R.id.indicatorTabLayout);
 
+            new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+                // This is empty because we don't need to set any text on tabs
+            }).attach();
 
-            // Automatically sets video to loop until user presses stop
-            mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.setLooping(true);
-                }
-            });
-            mPlay.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    playVideo();
-                }
-            });
-            mLeft.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    /**
-                     if (mVideoView != null) {
-                     mVideoView.pause();
-                     }
-                     */
-                    if(currentIndex > 0) {
-                        currentIndex--;
-                        Uri uri = Uri.parse(videoUrls.get(currentIndex));
-                        mVideoView.setVideoURI(uri);
-                        mVideoView.start();
-                    }
-                    else{
-                        // Replace Toast with carousel indicators
-                        Toast.makeText(getApplicationContext(),"No more previous videos.",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            mRight.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    /*
-                     if (mVideoView != null) {
-                     mVideoView.seekTo(0);
-                     }
-                     */
-                    if(currentIndex < indexes.size() - 2) {
-                        currentIndex++;
-                        Uri uri = Uri.parse(videoUrls.get(currentIndex));
-                        mVideoView.setVideoURI(uri);
-                        mVideoView.start();
-                    } else{
-                        // Replace Toast with carousel indicators
-                        Toast.makeText(getApplicationContext(),"No more videos to load.",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
             mSlow.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     /*

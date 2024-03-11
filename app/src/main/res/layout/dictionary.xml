@@ -14,6 +14,35 @@
         android:id="@+id/webView" />
     -->
 
+    <RelativeLayout
+        android:id="@+id/video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/word">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/carouselViewPager"
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/indicatorTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/carouselViewPager"
+            android:layout_gravity="bottom"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp" />
+    </RelativeLayout>
+
+    <!--
     <VideoView
         android:id="@+id/video"
         android:layout_width="350dp"
@@ -23,7 +52,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/word"/>
-        <!-- app:layout_constraintTop_toBottomOf="@+id/search"-->
+    -->
 
     <TextView
         android:id="@+id/word"
@@ -32,13 +61,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/video"
+        app:layout_constraintBottom_toTopOf="@+id/restart"
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
         android:textSize="25sp"
         android:text="" />
 
     <Button
-        android:id="@+id/playButton"
+        android:id="@+id/restart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -47,22 +77,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/slowButton"
         app:layout_constraintTop_toBottomOf="@+id/word" />
-
-    <ImageView
-        android:id="@+id/leftButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_back"
-        android:clickable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/slowButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playButton"
-        android:contentDescription="back"
-        android:focusable="true" />
 
     <Button
         android:id="@+id/slowButton"
@@ -70,22 +86,9 @@
         android:layout_height="wrap_content"
         android:text="@string/slow"
         android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rightButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/leftButton"
-        app:layout_constraintTop_toTopOf="@+id/leftButton" />
-
-    <ImageView
-        android:id="@+id/rightButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_forward"
-        android:clickable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/slowButton"
-        app:layout_constraintTop_toTopOf="@+id/slowButton"
-        android:focusable="true" />
+        app:layout_constraintTop_toBottomOf="@+id/restart"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

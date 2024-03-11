@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +49,7 @@ public class SentenceActivity extends AppCompatActivity {
     ArrayList<String> stitchedWords = new ArrayList<String>();
     String sentence;
     String[] words;
+    int colour = Color.parseColor("#8692f7");
 
     public String readJSON(){
         String json = null;
@@ -86,6 +87,10 @@ public class SentenceActivity extends AppCompatActivity {
                     snackbar.show();
                 }
                 else {
+                    stitchedWords.clear();
+                    indexes.clear();
+                    videoUrls.clear();
+
                     sentence = input.getEditText().getText().toString();
                     words = sentence.split("\\s+");
                     /* TODO make it remove words like "the" as no sign for that
@@ -103,6 +108,7 @@ public class SentenceActivity extends AppCompatActivity {
                                 if (wordArray.getString(i).equalsIgnoreCase(word)) {
                                     indexes.add(i);
                                     stitchedWords.add(word);
+                                    Log.d(TAG, "Added word: " + word + " to stitchedWords");
                                     break;
                                 }
                             }
@@ -176,9 +182,11 @@ public class SentenceActivity extends AppCompatActivity {
     private void highlightWord(int index) {
         // Update text to highlight current word playing
         Spannable spannable = new SpannableString(TextUtils.join(" ", stitchedWords));
-        spannable.setSpan(new BackgroundColorSpan(Color.YELLOW), index, index + stitchedWords.get(currentIndex).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(colour), index, index + stitchedWords.get(currentIndex).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         output.setText(spannable);
-        stringIndex = stitchedWords.get(currentIndex).length() + 1;
-
+        Log.d(TAG, "Current index from highlightWord: "+currentIndex);
+        stringIndex += stitchedWords.get(currentIndex).length() + 1;
+        Log.d(TAG, "Word: " + stitchedWords.get(currentIndex) + " with length: " + stitchedWords.get(currentIndex).length());
+        Log.d(TAG, "String index: "+stringIndex);
     }
 }

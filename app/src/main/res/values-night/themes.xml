@@ -2,6 +2,14 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Shine" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/lavender</item>
+        <item name="colorAccent">@color/lavender</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+    </style>
+
+    <style name="MyTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/ubuntu</item>
     </style>
 </resources>

@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.shine.Util.Model;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +22,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class LearnFragment extends Fragment {
     RecyclerView recycler;
     List<Model> modelList;
     int[] imgs;
     RecyclerView.Adapter adapter;
+    RelativeLayout relativeLayout;
 
     public LearnFragment(){
         // require a empty public constructor
@@ -48,6 +54,14 @@ public class LearnFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_learn, container, false);
+
+        if(getArguments() != null && Objects.requireNonNull(requireArguments().getString("finished")).equalsIgnoreCase("true")){
+            // Create snackbar if user has finished cards
+            relativeLayout = rootView.findViewById(R.id.learning_fragment);
+            Snackbar snackbar = Snackbar
+                    .make(relativeLayout, "Finished learning cards for this category.", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
 
         modelList = new ArrayList<>();
         // array of all category card images in order, making it easier to add or remove
@@ -88,8 +102,8 @@ public class LearnFragment extends Fragment {
 
             for(int i=0, max=obj.length(); i < max; i++){
                 String category = it.next();
-                // TODO change description tag
-                modelList.add(new Model(imgs[i], category, "Description..."));
+                String description = "Signs: " + obj.getJSONArray(category).toString().replace(",","").replace("\""," ").replace("[","").replace("]","");
+                modelList.add(new Model(imgs[i], category, description));
             }
         } catch (JSONException e) {
             throw new RuntimeException(e);

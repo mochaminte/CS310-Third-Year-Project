@@ -16,6 +16,9 @@ public interface FsrsDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Fsrs fsrs);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertAll(List<Fsrs> fsrs);
+
     @Query("DELETE FROM fsrs")
     void deleteAll();
 
@@ -38,7 +41,12 @@ public interface FsrsDao {
     public List<Fsrs> getDueCards(SupportSQLiteQuery query);
     // "SELECT * FROM fsrs WHERE next_repetition <= System.currentTimeMillis()"
 
+    @Query("SELECT COUNT(*) AS num_fsrs FROM fsrs WHERE state <> 'NEW'")
+    public int learntWords();
 
+    @RawQuery
+    public int getDueCardNumber(SupportSQLiteQuery query);
 
-
+    @Query("SELECT COUNT(*) AS num_fsrs FROM fsrs WHERE state == 'NEW'")
+    public int newWords();
 }

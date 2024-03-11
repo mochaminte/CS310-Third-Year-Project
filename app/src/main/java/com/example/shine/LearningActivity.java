@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,14 +32,16 @@ public class LearningActivity extends AppCompatActivity {
     private static final int PICK_VIDEO_REQUEST = 1;
     private CardScheduler cardScheduler;
     VideoView videoView, videoAnswer;
-    TextView name, wordAnswer, word;
+    TextView name, wordAnswer, word, uploadAnswer;
     Boolean signPrompt;
     String category, front, back;
     Button again, hard, good, easy, reveal;
     ProgressBar progressBar;
-    LinearLayout ratings;
+    LinearLayout ratings, uploadSect;
+    ImageButton upload;
     private Handler handler;
     private int progressStatus = 0;
+    LearnFragment secondFragment;
 
     public void deleteDatabaseFile(String databaseName) {
         File databases =
@@ -51,6 +54,75 @@ public class LearningActivity extends AppCompatActivity {
             Log.d("DATABASE", "Failed to delete database");
     }
 
+    public void signPrompt(){
+        // set invisibility to ratings
+        ratings.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        wordAnswer.setVisibility(View.INVISIBLE);
+
+        videoAnswer.setVisibility(View.INVISIBLE); // hide video answer, do not use
+        word.setVisibility(View.INVISIBLE);        // hide word prompt, do not use
+        wordAnswer.setVisibility(View.INVISIBLE);  // hide word answer, reveal later
+        videoView.setVisibility(View.VISIBLE);     // make sure video prompt is visible
+        uploadSect.setVisibility(View.INVISIBLE);  // hide upload button
+        Uri uri = Uri.parse(front);
+        videoView.setVideoURI(uri);
+        videoView.start();
+        // Automatically sets video to loop
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+        wordAnswer.setText(back); // set answer
+    }
+
+    public void wordPrompt(){
+        // set invisibility to ratings
+        ratings.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        wordAnswer.setVisibility(View.INVISIBLE);
+
+        videoAnswer.setVisibility(View.INVISIBLE); // hide video answer, reveal later
+        word.setVisibility(View.VISIBLE);          // Use word prompt
+        wordAnswer.setVisibility(View.INVISIBLE);  // hide word answer, do not use
+        videoView.setVisibility(View.INVISIBLE);   // hide video prompt, do not use
+
+        uploadAnswer.setText("");
+        uploadSect.setVisibility(View.VISIBLE);    // allow user to upload
+
+        upload.setOnClickListener(view -> {
+            openFileChooser();
+        });
+
+
+        word.setText(front); // set word prompt
+        Uri uri = Uri.parse(back);
+        videoAnswer.setVideoURI(uri); // set sign as answer
+        videoAnswer.start();
+        // Automatically sets video to loop
+        videoAnswer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+    }
+
+    public void revealAnswer(){
+        reveal.setVisibility(View.GONE);
+        uploadSect.setVisibility(View.INVISIBLE);
+        if(signPrompt) {
+            wordAnswer.setVisibility(View.VISIBLE);
+        }
+        else{
+            videoAnswer.setVisibility(View.VISIBLE);
+            // openFileChooser(); // allow user to upload a file
+        }
+        ratings.setVisibility(View.VISIBLE);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +133,11 @@ public class LearningActivity extends AppCompatActivity {
             Python.start(new AndroidPlatform(getApplicationContext()));
         }
 
-        deleteDatabaseFile("card_database");
+        // If user sent back to category page, then they have finished cards so use this to put a snackbar
+        Bundle bundle = new Bundle();
+        bundle.putString("finished", "true");
+        secondFragment = new LearnFragment();
+        secondFragment.setArguments(bundle);
 
         // mCardViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(CardViewModel.class);
         progressBar = findViewById(R.id.progress);
@@ -75,72 +151,18 @@ public class LearningActivity extends AppCompatActivity {
         easy = findViewById(R.id.easy);
         ratings = findViewById(R.id.ratings);
         reveal = findViewById(R.id.reveal);
+        uploadSect = findViewById(R.id.uploadSect);
+        upload = findViewById(R.id.upload);
+        uploadAnswer = findViewById(R.id.uploadAnswer);
 
 
         // TODO make a header and add the category name to the header
         // get the intent
         category = getIntent().getStringExtra("name");
         cardScheduler = new CardScheduler(category, getApplicationContext());
-
         cardScheduler.queueDueCards(category, getApplicationContext());
 
-        front = cardScheduler.getCardFront(); // front of card
-        Log.d("CARD", "Card front: " + front);
-        back = cardScheduler.getCardBack(); // back of card (answer)
-        Log.d("CARD", "Card back: " + back);
-        signPrompt = cardScheduler.getSignPrompt(); // check whether front is a sign or a word
-        Log.d("CARD", "Card bool: " + signPrompt);
-
-        // if sign is the front, set the videoView and set answer to the word meaning
-        if(signPrompt){
-            Uri uri = Uri.parse(front);
-            videoView.setVideoURI(uri);
-            videoView.start();
-            // Automatically sets video to loop until user presses stop
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.setLooping(true);
-                }
-            });
-            wordAnswer.setText(back); // set answer
-        }
-        else{
-            word.setText(front);
-            Uri uri = Uri.parse(back);
-            videoAnswer.setVideoURI(uri);
-        }
-
-        // set invisibility to ratings
-        ratings.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
-        wordAnswer.setVisibility(View.INVISIBLE);
-
-        // listen for when user presses reveal button
-        reveal.setOnClickListener(view -> {
-            wordAnswer.setVisibility(View.VISIBLE);
-            // let user choose file reveal ratings and make reveal button disappear
-            // openFileChooser(); // opens video selector to upload
-            reveal.setVisibility(View.GONE);
-            ratings.setVisibility(View.VISIBLE);
-        });
-
-        // listen for when the user presses rating buttons
-        again.setOnClickListener(view -> {
-            cardScheduler.onRating(0, category, getApplicationContext());
-            loadNext();
-
-        });
-        hard.setOnClickListener(view -> {
-            cardScheduler.onRating(1, category, getApplicationContext());
-            // play next video & set new answer & reset visibility for buttons (gone = no space)
-        });
-        good.setOnClickListener(view -> {
-            cardScheduler.onRating(2, category, getApplicationContext());
-        });
-        easy.setOnClickListener(view -> {
-            cardScheduler.onRating(3, category, getApplicationContext());
-        });
+        loadNext();
 
         /* TODO sort out progress bar dynamically changing
         new Thread(new Runnable() {
@@ -164,7 +186,6 @@ public class LearningActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
          */
     }
 
@@ -172,32 +193,51 @@ public class LearningActivity extends AppCompatActivity {
     public void loadNext(){
         // check if there are cards left to study
         if(cardScheduler.queueEmpty()){
-            // TODO add new activity intent to category page w/ snackbar saying completed cards
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.learning_activity, secondFragment)
+                    .commit();
         }
+
+        // bring back initial settings w/ reveal and rating buttons
+        reveal.setVisibility(View.VISIBLE);
+        ratings.setVisibility(View.INVISIBLE);
 
         front = cardScheduler.getCardFront(); // front of card
         back = cardScheduler.getCardBack(); // back of card (answer)
         signPrompt = cardScheduler.getSignPrompt(); // check whether front is a sign or a word
 
-        // if sign is the front, set the videoview and set answer to the word meaning
+        // if sign is the front, set the videoView and set answer to the word meaning
         if(signPrompt){
-            Uri uri = Uri.parse(front);
-            videoView.setVideoURI(uri);
-            videoView.start();
-            // Automatically sets video to loop until user presses stop
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.setLooping(true);
-                }
-            });
-            wordAnswer.setText(back); // set answer
+            signPrompt();
         }
         else{
-            word.setText(front);
-            Uri uri = Uri.parse(back);
-            videoAnswer.setVideoURI(uri);
+            wordPrompt();
         }
+
+        // listen for when user presses reveal button
+        reveal.setOnClickListener(view -> {
+            revealAnswer();
+        });
+
+        // listen for when the user presses rating buttons
+        again.setOnClickListener(view -> {
+            cardScheduler.onRating(0, category, getApplicationContext());
+            loadNext();
+
+        });
+        hard.setOnClickListener(view -> {
+            cardScheduler.onRating(1, category, getApplicationContext());
+            loadNext();
+        });
+        good.setOnClickListener(view -> {
+            cardScheduler.onRating(2, category, getApplicationContext());
+            loadNext();
+        });
+        easy.setOnClickListener(view -> {
+            cardScheduler.onRating(3, category, getApplicationContext());
+            loadNext();
+        });
     }
 
     // Code below required for calling inference on model hosted on Hugging Face Spaces
@@ -226,10 +266,10 @@ public class LearningActivity extends AppCompatActivity {
             Toast.makeText(this, "Video selected: " + videoUri.toString(), Toast.LENGTH_SHORT).show();
             float result = runModel(front, videoPath);
             if( result > 0.7 ){
-                wordAnswer.setText("Correct"); // TODO change to correct or not
+                uploadAnswer.setText("Correctly signed !"); // TODO change to correct or not
             }
             else{
-                wordAnswer.setText("Incorrect");
+                uploadAnswer.setText("Incorrectly signed !");
             }
         }
     }

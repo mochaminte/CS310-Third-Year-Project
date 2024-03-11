@@ -9,8 +9,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical" >
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
@@ -21,7 +20,6 @@
         android:focusableInTouchMode="true">
         <requestFocus />
     </androidx.appcompat.widget.SearchView>
-
 
     <ListView
         android:id="@+id/listView"
@@ -40,6 +38,7 @@
         android:layout_margin="16dp"
         android:tooltipText="Translate Sentences"
         android:contentDescription="Person Transcribing"
+        android:backgroundTint="@color/lavender"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

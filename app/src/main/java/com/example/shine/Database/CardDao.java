@@ -5,7 +5,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +14,7 @@ public interface CardDao {
     void insert(Card card);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(ArrayList<Card> order);
+    void insertAll(List<Card> order);
 
     @Query("DELETE FROM card")
     void deleteAll();

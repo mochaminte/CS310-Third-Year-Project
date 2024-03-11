@@ -29,14 +29,17 @@ public class Fsrs {
     public long next_repetition;
     @ColumnInfo(defaultValue = "0")
     public long last_review;
+    public String category;
 
     @Ignore
     public Fsrs(){
         this.carduuid = UUID.randomUUID();
     }
 
-    public Fsrs(@NonNull UUID carduuid){
+    public Fsrs(@NonNull UUID carduuid, String category){
         this.carduuid = carduuid;
+        this.category = category;
+        this.state = "NEW";
     }
 
     @NonNull
@@ -57,5 +60,7 @@ public class Fsrs {
     public void setNextRepetitionTime(long next_repetition) { this.next_repetition = next_repetition; }
     public long getLastReview() { return last_review; }
     public void setLastReview(long last_review) { this.last_review = last_review; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
 }

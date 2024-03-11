@@ -63,6 +63,10 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
+    // splashscreen api
+    val splashScreenVersion = "1.0.1"
+    implementation("androidx.core:core-splashscreen:$splashScreenVersion")
+
     // database
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
